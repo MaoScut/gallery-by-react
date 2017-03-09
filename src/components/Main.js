@@ -168,7 +168,7 @@ var AppComponent = React.createClass({
 		vPosRangeTopY = vPosRange.topY,
 		vPosRangeX = vPosRange.x,
 		imgsArrangeTopArr = [],
-		topImgNum = Math.ceil(Math.random()*2),
+		topImgNum = Math.floor(Math.random()*2),
 		topImgSpliceIndex = 0,
 		imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex,1);
 
@@ -211,6 +211,7 @@ var AppComponent = React.createClass({
 			}
 		}
 
+		//debugger;
 		if(imgsArrangeTopArr && imgsArrangeTopArr[0]){
 			imgsArrangeArr.splice(topImgSpliceIndex,0,imgsArrangeTopArr[0]);
 		};
@@ -298,6 +299,7 @@ var AppComponent = React.createClass({
   			// console.log(_value);
   			// console.log(_imgsArr);
   			imgFigures.push(<ImageFigure key = {_ref} ref = {_ref} data = {value} arrange = {this.state.imgsArrangeArr[index]} inverse = {this.inverse(index)} center = {this.center(index)} />);
+  			controllerUnits.push(<ControllerUnit key = {index} arrange = {this.state.imgsArrangeArr[index]} inverse = {this.inverse(index)} center = {this.center(index)} />);
   		}.bind(this));
   		return(
   			<section className = "stage" ref = "stage">
@@ -312,7 +314,32 @@ var AppComponent = React.createClass({
 	}
 })
 
+var ControllerUnit = React.createClass({
+	handleClick: function(e){
+		if(this.props.arrange.isCenter){
+			this.props.inverse();
+		}else{
+			this.props.center();
+		}
+		e.stopPropagation();
+		e.preventDefault();
 
+	},
+	render:function(){
+		var controllerUnitClassName = "controller-unit";
+		if(this.props.arrange.isCenter)
+		{
+			controllerUnitClassName += " is-center";
+			if(this.props.arrange.isInverse){
+				//debugger;
+				controllerUnitClassName += " is-inverse";
+			}
+		}
+		return(
+			<span className = {controllerUnitClassName} onClick = {this.handleClick}></span>
+			)
+	}
+})
 
 AppComponent.defaultProps = {
 };
