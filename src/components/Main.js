@@ -7,15 +7,66 @@ import ReactDOM from 'react-dom';
 
 
 //get picture data array
-var imagesDatas = require('../data/imagesDatas.json');
+var imagesDatas = [
+	{
+		"fileName": "1.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},
+		{
+		"fileName": "2.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},
+		{
+		"fileName": "3.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},
+		{
+		"fileName": "4.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},
+		{
+		"fileName": "5.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},
+		{
+		"fileName": "6.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},	
+	{
+		"fileName": "7.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},
+		{
+		"fileName": "8.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},
+		{
+		"fileName": "10.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	},
+		{
+		"fileName": "11.jpg",
+		"title": "Heaven of time",
+		"desc": "Never stop learning, come on, Mao!"
+	}
 
+];
 imagesDatas = (function genImageURL(imagesDatasArr){
 	for(var i = 0; i<imagesDatasArr.length;i++){
 		var singleImageData = imagesDatasArr[i];
 		singleImageData.imageURL = require('../images/'+singleImageData.fileName);
 		imagesDatasArr[i] = singleImageData;
-		
 	};
+
 	return imagesDatasArr;
 })(imagesDatas);
 
@@ -28,6 +79,19 @@ function get30DegRandom(){
 }
 
 var ImageFigure = React.createClass({
+	handleClick: function(e){
+		//alert("!!");
+		if(this.props.arrange.isCenter){
+			this.props.inverse();
+		} 
+		else{
+			this.props.center();
+		}
+		
+		e.stopPropagation();
+		e.preventDefault();
+	},
+
 	render:function(){
 		var styleObj = {};
 		if(this.props.arrange.pos){
@@ -35,16 +99,28 @@ var ImageFigure = React.createClass({
 		}
 
 		if(this.props.arrange.rotate){
-			['-moz-', '-ms-', '-webkit-', ''].forEach(function(value){
-				styleObj[value + 'transform'] = 'rotate(' + this.props.arrange.rotate + 'deg)';
+			['Moz', 'ms', 'Webkit', ''].forEach(function(value){
+				styleObj[value + 'Transform'] = 'rotate(' + this.props.arrange.rotate + 'deg)';
 			}.bind(this))
 			
+		};
+
+		if(this.props.arrange.isCenter){
+			styleObj.zIndex = 11;
 		}
+
+		var imgFigureClassName = "img-figure";
+		imgFigureClassName += this.props.arrange.isInverse ? " is-inverse" : "";
 		return(
-			<figure className = "img-figure" style = {styleObj}>
+			<figure className = {imgFigureClassName} style = {styleObj} onClick = {this.handleClick}>
 				<img src={this.props.data.imageURL}/>
 				<figcaption>
 					<h2 className = "img-tit">{this.props.data.title}</h2>
+					<div className = "img-back" onClick = {this.handleClick}>
+						<p>
+							{this.props.data.desc}
+						</p>
+					</div>
 				</figcaption>	
 			</figure>
 			);
@@ -67,6 +143,19 @@ var AppComponent = React.createClass({
 			topY:[0,0]
 		}
 	},
+
+	inverse: function(index){
+		return function(){
+			var imgsArrangeArr = this.state.imgsArrangeArr;
+			//debugger;
+			imgsArrangeArr[index].isInverse = !imgsArrangeArr[index].isInverse;
+			this.setState({
+				imgsArrangeArr: imgsArrangeArr
+			});
+			//debugger;
+		}.bind(this);
+	},
+
 	reArrange: function(centerIndex){
 		var imgsArrangeArr = this.state.imgsArrangeArr,
 		Constant = this.Constant,
@@ -83,9 +172,11 @@ var AppComponent = React.createClass({
 		topImgSpliceIndex = 0,
 		imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex,1);
 
-		imgsArrangeCenterArr[0].pos = centerPos;
-
-		imgsArrangeCenterArr[0].rotate = 0;
+		imgsArrangeCenterArr[0] = {
+			pos: centerPos,
+			rotate: 0,
+			isCenter: true
+		};
 
 		topImgSpliceIndex = Math.ceil(Math.random()*( imgsArrangeArr.length - topImgNum));
 		imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex,topImgNum);
@@ -96,7 +187,8 @@ var AppComponent = React.createClass({
 					top: getRangeRandom( vPosRangeTopY[0], vPosRangeTopY[1]),
 					left: getRangeRandom(vPosRangeX[0], vPosRangeX[1])
 				},
-				rotate:get30DegRandom()
+				rotate:get30DegRandom(),
+				isCenter: false
 			}
 		});
 
@@ -114,7 +206,8 @@ var AppComponent = React.createClass({
 					top: getRangeRandom(hPosRangeY[0], hPosRangeY[1]),
 					left: getRangeRandom(hPosRangeLORX[0],hPosRangeLORX[1])
 				},
-				rotate: get30DegRandom()
+				rotate: get30DegRandom(),
+				isCenter:false
 			}
 		}
 
@@ -126,8 +219,15 @@ var AppComponent = React.createClass({
 		this.setState({
 			imgsArrangeArr: imgsArrangeArr
 		});
-
+	
 	},
+
+	center: function(index){
+		return function(){
+			this.reArrange(index);
+		}.bind(this);
+	},
+
 	getInitialState: function(){
 		return {
 			imgsArrangeArr:[
@@ -136,7 +236,9 @@ var AppComponent = React.createClass({
 					left: '0',
 					top: '0'
 				},
-				rotate: 0
+				rotate: 0,
+				isInverse: false,
+				isCenter: false
 			}*/]
 		}
 	},
@@ -184,7 +286,9 @@ var AppComponent = React.createClass({
   						left: 0,
   						top: 0
   					},
-  					rotate: 0
+  					rotate: 0,
+  					isInverse: false,
+  					isCenter: false
   				}
   			};
   			 var _ref = 'imgFigure'+ index;
@@ -193,8 +297,7 @@ var AppComponent = React.createClass({
   			// var _imgsArr = this.state.imgsArrangeArr[index];
   			// console.log(_value);
   			// console.log(_imgsArr);
-  			imgFigures.push(<ImageFigure key = {_ref} ref = {_ref} data = {value} arrange = {this.state.imgsArrangeArr[index]} />);
-
+  			imgFigures.push(<ImageFigure key = {_ref} ref = {_ref} data = {value} arrange = {this.state.imgsArrangeArr[index]} inverse = {this.inverse(index)} center = {this.center(index)} />);
   		}.bind(this));
   		return(
   			<section className = "stage" ref = "stage">
