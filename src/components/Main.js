@@ -1,5 +1,5 @@
 require('normalize.css/normalize.css');
-require('styles/App.css');
+require('styles/App.scss');
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -7,65 +7,66 @@ import ReactDOM from 'react-dom';
 
 
 //get picture data array
-var imagesDatas = [
-	{
-		"fileName": "1.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},
-		{
-		"fileName": "2.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},
-		{
-		"fileName": "3.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},
-		{
-		"fileName": "4.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},
-		{
-		"fileName": "5.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},
-		{
-		"fileName": "6.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},	
-	{
-		"fileName": "7.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},
-		{
-		"fileName": "8.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},
-		{
-		"fileName": "10.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	},
-		{
-		"fileName": "11.jpg",
-		"title": "Heaven of time",
-		"desc": "Never stop learning, come on, Mao!"
-	}
+// var imagesDatas = [
+// 	{
+// 		"fileName": "1.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},
+// 		{
+// 		"fileName": "2.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},
+// 		{
+// 		"fileName": "3.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},
+// 		{
+// 		"fileName": "4.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},
+// 		{
+// 		"fileName": "5.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},
+// 		{
+// 		"fileName": "6.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},	
+// 		{
+// 		"fileName": "7.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},
+// 		{
+// 		"fileName": "8.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},
+// 		{
+// 		"fileName": "10.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	},
+// 		{
+// 		"fileName": "11.jpg",
+// 		"title": "Heaven of time",
+// 		"desc": "Never stop learning, come on, Mao!"
+// 	}
 
-];
+// ];
+var imagesDatas = require('../data/imagesDatas.json');
 imagesDatas = (function genImageURL(imagesDatasArr){
 	for(var i = 0; i<imagesDatasArr.length;i++){
 		var singleImageData = imagesDatasArr[i];
 		singleImageData.imageURL = require('../images/'+singleImageData.fileName);
 		imagesDatasArr[i] = singleImageData;
-	};
+	}
 
 	return imagesDatasArr;
 })(imagesDatas);
@@ -83,8 +84,7 @@ var ImageFigure = React.createClass({
 		//alert("!!");
 		if(this.props.arrange.isCenter){
 			this.props.inverse();
-		} 
-		else{
+		} else{
 			this.props.center();
 		}
 		
@@ -103,7 +103,7 @@ var ImageFigure = React.createClass({
 				styleObj[value + 'Transform'] = 'rotate(' + this.props.arrange.rotate + 'deg)';
 			}.bind(this))
 			
-		};
+		}
 
 		if(this.props.arrange.isCenter){
 			styleObj.zIndex = 11;
@@ -200,7 +200,7 @@ var AppComponent = React.createClass({
 			else
 			{
 				hPosRangeLORX = hPosRangeRightSecX;
-			};
+			}
 			imgsArrangeArr[i]={
 				pos:{
 					top: getRangeRandom(hPosRangeY[0], hPosRangeY[1]),
@@ -214,9 +214,8 @@ var AppComponent = React.createClass({
 		//debugger;
 		if(imgsArrangeTopArr && imgsArrangeTopArr[0]){
 			imgsArrangeArr.splice(topImgSpliceIndex,0,imgsArrangeTopArr[0]);
-		};
+		}
 		imgsArrangeArr.splice(centerIndex, 0, imgsArrangeCenterArr[0]);
-		console.log(imgsArrangeArr);
 		this.setState({
 			imgsArrangeArr: imgsArrangeArr
 		});
@@ -291,7 +290,7 @@ var AppComponent = React.createClass({
   					isInverse: false,
   					isCenter: false
   				}
-  			};
+  			}
   			 var _ref = 'imgFigure'+ index;
   			// console.log(_ref);
   			// var _value = value;
